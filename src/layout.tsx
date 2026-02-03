@@ -7,6 +7,10 @@ import {
   IconTag,
   IconMenuFold,
   IconMenuUnfold,
+  IconHome,
+  IconCommon,
+  IconStorage,
+  IconArchive,
 } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 import qs from 'query-string';
@@ -29,10 +33,15 @@ const Content = Layout.Content;
 
 function getIconFromKey(key) {
   switch (key) {
-    case 'dashboard':
-      return <IconDashboard className={styles.icon} />;
-    case 'example':
-      return <IconTag className={styles.icon} />;
+    case 'Welcome':
+      return <IconHome className={styles.icon} />;
+    case 'DataSet':
+      return <IconCommon className={styles.icon} />;
+    case 'DataManagement':
+      return <IconStorage className={styles.icon} />;
+    case 'SceneAheadData':
+      return <IconArchive className={styles.icon} />;
+
     default:
       return <div className={styles['icon-empty']} />;
   }

@@ -13,21 +13,28 @@ export type IRoute = AuthParams & {
 
 export const routes: IRoute[] = [
   {
-    name: 'menu.dashboard',
-    key: 'dashboard',
+    name: '欢迎',
+    key: 'Welcome',
+  },
+  {
+    name: '数据集',
+    key: 'DataSet',
+  },
+  {
+    name: '数据管理',
+    key: 'DataManagement',
+  },
+  {
+    name: '前景资料库',
+    key: 'SceneAheadData',
     children: [
       {
-        name: 'menu.dashboard.workplace',
-        key: 'dashboard/workplace',
+        name: '自研',
+        key: 'SceneAheadData/self-developed',
       },
     ],
   },
-  {
-    name: 'Example',
-    key: 'example',
-  },
 ];
-
 export const getName = (path: string, routes) => {
   return routes.find((item) => {
     const itemPath = `/${item.key}`;
