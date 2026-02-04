@@ -46,7 +46,9 @@ export function getDatasetList(params: DatasetListParams) {
 }
 
 export function getDatasetDetail(datasetId: string) {
-  return axios.get<DatasetDetailResponse>(`/api/v1/dataset/${datasetId}`);
+  return axios.get<DatasetDetailResponse>(
+    `/api/v1/dataset/detail/${datasetId}`
+  );
 }
 
 export function createDataset(params: API.DatasetCreateParams) {
