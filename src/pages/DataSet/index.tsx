@@ -26,6 +26,8 @@ function DataSet() {
       dataIndex: 'id',
       fixed: 'left',
       align: 'center',
+      // 左侧固定
+      width: 100,
     },
     {
       title: '数据集名称',
@@ -210,7 +212,7 @@ function DataSet() {
   };
 
   return (
-    <Card style={{ height: '80vh' }}>
+    <Card style={{ height: '100%' }}>
       <Typography.Title heading={6}>数据集列表</Typography.Title>
       <SearchForm onSearch={handleSearch} onReset={handleReset} />
       <Table
