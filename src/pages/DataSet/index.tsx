@@ -7,12 +7,15 @@ import {
   Message,
   Tooltip,
   Button,
+  Space,
 } from '@arco-design/web-react';
+import { IconPlus, IconDownload } from '@arco-design/web-react/icon';
 import type { TableProps } from '@arco-design/web-react';
 import { getDatasetList } from '@/api/dataset';
 import dayjs from 'dayjs';
 import SearchForm from './form';
 import { useHistory } from 'react-router-dom';
+import CreateForm from './components/add';
 
 function DataSet() {
   const history = useHistory();
@@ -244,10 +247,28 @@ function DataSet() {
     });
   };
 
+  const handleReload = () => {
+    fetchData(pagination.current, pagination.pageSize, searchParams);
+  };
+
   return (
     <Card style={{ height: '100%' }}>
       <Typography.Title heading={6}>数据集列表</Typography.Title>
       <SearchForm onSearch={handleSearch} onReset={handleReset} />
+      <div style={{ textAlign: 'right', marginBottom: 12 }}>
+        <Space>
+          <Button
+            type="primary"
+            icon={<IconPlus />}
+            onClick={() => {
+              setEditingDatasetId('');
+              setEditModalVisible(true);
+            }}
+          >
+            新建
+          </Button>
+        </Space>
+      </div>
       <Table
         rowKey={(record) => record.id || Math.random().toString()}
         loading={loading}
@@ -255,6 +276,17 @@ function DataSet() {
         pagination={pagination}
         columns={columns}
         data={data}
+      />
+      <CreateForm
+        key="form"
+        datasetId={editingDatasetId}
+        visible={editModalVisible}
+        onVisibleChange={setEditModalVisible}
+        onCancel={() => {
+          setEditModalVisible(false);
+          setEditingDatasetId(null);
+        }}
+        reload={handleReload}
       />
     </Card>
   );
