@@ -8,6 +8,11 @@ import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import axios from 'axios';
+
+// Use VITE_API_BASE to set axios baseURL for builds (when set) or use relative paths with dev proxy
+const apiBase = import.meta.env.VITE_API_BASE ?? '';
+// axios.defaults.baseURL = apiBase;
+
 import rootReducer from './store';
 import PageLayout from './layout';
 import { GlobalContext } from './context';
@@ -37,14 +42,15 @@ function Index() {
   function fetchUserInfo() {
     store.dispatch({
       type: 'update-userInfo',
-      payload: { userLoading: true },
+      payload: { userLoading: false }, //默认userLoading: true
     });
-    axios.get('/api/user/userInfo').then((res) => {
-      store.dispatch({
-        type: 'update-userInfo',
-        payload: { userInfo: res.data, userLoading: false },
-      });
-    });
+    // 暂时不调用登录接口
+    // axios.get('/api/user/userInfo').then((res) => {
+    //   store.dispatch({
+    //     type: 'update-userInfo',
+    //     payload: { userInfo: res.data, userLoading: false },
+    //   });
+    // });
   }
 
   useEffect(() => {
