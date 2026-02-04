@@ -11,27 +11,10 @@ import {
 } from '@arco-design/web-react';
 import { IconRefresh, IconSearch } from '@arco-design/web-react/icon';
 import styles from './style/index.module.less';
-
+import { robotModelOptions, gripperOptions } from './constants';
 const { Row, Col } = Grid;
 const { useForm } = Form;
 const { RangePicker } = DatePicker;
-const robotModelOptions = [
-  { label: 'Franka Emika Panda', value: 'Franka Emika Panda' },
-  { label: 'TurtleBot3', value: 'TurtleBot3' },
-  { label: 'Pepper Robot', value: 'Pepper Robot' },
-  { label: 'ABB IRB 1200', value: 'ABB IRB 1200' },
-  { label: 'FarmBot', value: 'FarmBot' },
-  {
-    label: 'Custom Agricultural Gripper',
-    value: 'Custom Agricultural Gripper',
-  },
-  { label: 'r1lite', value: 'r1lite' },
-  { label: 'FastUMI Pro hardware suite', value: 'FastUMI Pro hardware suite' },
-];
-const gripperOptions = [
-  { label: 'Parallel Gripper', value: 'Parallel Gripper' },
-  { label: 'Serial Gripper', value: 'Serial Gripper' },
-];
 
 function SearchForm(props: {
   onSearch: (values: Record<string, any>) => void;
@@ -168,13 +151,13 @@ function SearchForm(props: {
               />
             </Form.Item>
           </Col>
-
           <Col span={colSpan}>
             <Form.Item field="created_at" label="创建时间">
               <RangePicker
                 showTime
                 format="YYYY-MM-DD HH:mm:ss"
                 style={{ width: '100%' }}
+                placeholder={['开始时间', '结束时间']}
                 onChange={(dates) => {
                   if (dates && dates[0]) {
                     form.setFieldValue('created_at_start', dates[0]);
@@ -196,6 +179,7 @@ function SearchForm(props: {
                 showTime
                 format="YYYY-MM-DD HH:mm:ss"
                 style={{ width: '100%' }}
+                placeholder={['开始时间', '结束时间']}
                 onChange={(dates) => {
                   if (dates && dates[0]) {
                     form.setFieldValue('updated_at_start', dates[0]);

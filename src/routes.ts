@@ -6,6 +6,7 @@ export type IRoute = AuthParams & {
   key: string;
   // 当前页是否展示面包屑
   breadcrumb?: boolean;
+  path?: string;
   children?: IRoute[];
   // 当前路由是否渲染菜单项，为 true 的话不会在菜单中显示，但可通过路由地址访问。
   ignore?: boolean;
@@ -19,6 +20,19 @@ export const routes: IRoute[] = [
   {
     name: '数据集',
     key: 'DataSet',
+    children: [
+      {
+        name: '数据集列表',
+        key: 'DataSet',
+        ignore: true,
+      },
+      {
+        name: '数据集详情',
+        key: 'DataSet/detail',
+        ignore: true,
+        path: '/DataSet/detail/:dataset_id',
+      },
+    ],
   },
   {
     name: '数据管理',

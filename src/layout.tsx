@@ -152,9 +152,33 @@ function PageLayout() {
         }
         if (visibleChildren.length) {
           menuMap.current.set(route.key, { subMenu: true });
+          // 如果存在可见子路由，插入一个指向“列表”的可点击项（优先使用与父 key 相同的子路由）
+          const homeChild =
+            visibleChildren.find((c) => c.key === route.key) ||
+            visibleChildren[0];
+          const homeKey = homeChild.key;
+          const childrenToRender = visibleChildren.filter(
+            (c) => c.key !== homeKey
+          );
+          // 让 SubMenu 标题可点击，直接跳转到主列表页（阻止事件冒泡以避免触发展开/收起）
+          const clickableTitleDom = (
+            <span
+              onClick={(e) => {
+                e.stopPropagation();
+                onClickMenuItem(homeKey);
+              }}
+            >
+              {iconDom} {locale[route.name] || route.name}
+            </span>
+          );
           return (
-            <SubMenu key={route.key} title={titleDom}>
-              {travel(visibleChildren, level + 1, [...parentNode, route.name])}
+            <SubMenu key={route.key} title={clickableTitleDom}>
+              <MenuItem key={homeKey}>{titleDom}</MenuItem>
+              {childrenToRender.length > 0 &&
+                travel(childrenToRender, level + 1, [
+                  ...parentNode,
+                  route.name,
+                ])}
             </SubMenu>
           );
         }
@@ -247,10 +271,14 @@ function PageLayout() {
               <Content>
                 <Switch>
                   {flattenRoutes.map((route, index) => {
+                    const routePath = route.path ? route.path : `/${route.key}`;
+                    // 如果路径包含参数（:），保留部分匹配，否则使用 exact 精确匹配，避免父路径吞掉子路由
+                    const exact = !routePath.includes(':');
                     return (
                       <Route
                         key={index}
-                        path={`/${route.key}`}
+                        exact={exact}
+                        path={routePath}
                         component={route.component}
                       />
                     );

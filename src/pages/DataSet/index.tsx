@@ -5,29 +5,36 @@ import {
   Table,
   PaginationProps,
   Message,
+  Tooltip,
+  Button,
 } from '@arco-design/web-react';
 import type { TableProps } from '@arco-design/web-react';
 import { getDatasetList } from '@/api/dataset';
 import dayjs from 'dayjs';
 import SearchForm from './form';
+import { useHistory } from 'react-router-dom';
 
 function DataSet() {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
     total: 0,
   });
+  const { Text } = Typography;
   const [data, setData] = useState<API.Dataset[]>([]);
   const [searchParams, setSearchParams] = useState<API.SearchFormData>({});
+  const [editingDatasetId, setEditingDatasetId] = useState<string | null>(null);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [columns] = useState<TableProps['columns']>([
     {
       title: 'ID',
       dataIndex: 'id',
       fixed: 'left',
       align: 'center',
-      // 左侧固定
       width: 100,
+      render: (value) => <Text copyable>{value}</Text>,
     },
     {
       title: '数据集名称',
@@ -156,6 +163,32 @@ function DataSet() {
       fixed: 'right',
       width: 120,
       hideInSearch: true,
+      render: (_, record) => {
+        return (
+          <div>
+            <Button
+              type="text"
+              size="small"
+              onClick={() => {
+                setEditingDatasetId(record.id);
+                setEditModalVisible(true);
+              }}
+            >
+              编辑
+            </Button>
+            <Button
+              size="small"
+              type="text"
+              onClick={() => {
+                // 跳转详情
+                history.push(`/DataSet/detail/${record.id}`);
+              }}
+            >
+              详情
+            </Button>
+          </div>
+        );
+      },
     },
   ]);
   const fetchData = async (
