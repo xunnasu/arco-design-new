@@ -31,7 +31,7 @@ const DataSetDetail: React.FC = () => {
     );
 
   // 统一处理默认值的函数
-  const getValue = (value: any, defaultValue: string = '--') => {
+  const getValue = (value: any, defaultValue = '--') => {
     return value || defaultValue;
   };
   return (
