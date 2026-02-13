@@ -16,7 +16,13 @@ export type DatasetListResponse = {
   };
   success?: boolean;
 };
-
+export type DatasetEpisodeListResponse = {
+  data: {
+    list: API.Episode[];
+    total: number;
+  };
+  success?: boolean;
+};
 export type DatasetDetailResponse = {
   data: API.Dataset;
   success: boolean;
@@ -71,4 +77,11 @@ export function deleteDataset(datasetId: string) {
 
 export function getDatasetStats() {
   return axios.get<DatasetStatsResponse>('/api/v1/dataset/stats');
+}
+
+export function getDatasets(params: DatasetListParams) {
+  return axios.post<DatasetListResponse>('/api/v1/dataset/list', params);
+}
+export function getEpisodesList(params: DatasetListParams) {
+  return axios.post<DatasetEpisodeListResponse>('/api/v1/episode/list', params);
 }

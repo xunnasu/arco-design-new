@@ -10,6 +10,7 @@ import {
 } from '@arco-design/web-react';
 import { getDatasetDetail, updateDataset, createDataset } from '@/api/dataset';
 import { robotModelOptions, gripperOptions } from '../constants';
+import styles from '../style/add.module.less';
 import type { FC } from 'react';
 interface CreateFormProps {
   reload?: () => void;
@@ -99,7 +100,6 @@ const CreateForm: FC<CreateFormProps> = (props) => {
       setInitialValues({});
       form.resetFields();
     } catch (error) {
-      Message.error('操作失败，请重试！');
     } finally {
       setLoading(false);
     }
@@ -118,9 +118,13 @@ const CreateForm: FC<CreateFormProps> = (props) => {
         visible={visible}
         onOk={handleSubmit}
         onCancel={handleCancel}
+        autoFocus={false}
+        focusLock={true}
+        alignCenter={true}
         confirmLoading={loading}
         okText="确定"
         cancelText="取消"
+        className={styles['create-form']}
       >
         <Form
           form={form}
@@ -128,13 +132,28 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           initialValues={initialValues}
           autoComplete="off"
         >
-          <Form.Item field="dataset_name" label="数据集名称" required>
+          <Form.Item
+            field="dataset_name"
+            label="数据集名称"
+            required
+            rules={[{ required: true, message: '请输入数据集名称' }]}
+          >
             <Input placeholder="请输入数据集名称" />
           </Form.Item>
-          <Form.Item field="dataset_version" label="数据集版本" required>
+          <Form.Item
+            field="dataset_version"
+            label="数据集版本"
+            required
+            rules={[{ required: true, message: '请输入数据集版本' }]}
+          >
             <Input placeholder="请输入数据集版本" />
           </Form.Item>
-          <Form.Item field="dataset_format" label="数据集格式" required>
+          <Form.Item
+            field="dataset_format"
+            label="数据集格式"
+            required
+            rules={[{ required: true, message: '请输入数据集格式' }]}
+          >
             <Input placeholder="请输入数据集格式" />
           </Form.Item>
           <Form.Item field="description" label="描述">
@@ -143,7 +162,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
               autoSize={{ minRows: 3, maxRows: 6 }}
             />
           </Form.Item>
-          <Form.Item field="robot_model" label="机器人类型" required>
+          <Form.Item field="robot_model" label="机器人类型">
             <Select placeholder="请选择机器人类型">
               {robotModelOptions.map((option) => (
                 <Option key={option.value} value={option.value}>
@@ -155,7 +174,7 @@ const CreateForm: FC<CreateFormProps> = (props) => {
           <Form.Item field="robot_morphology" label="机器人形态">
             <Input placeholder="请输入机器人形态" />
           </Form.Item>
-          <Form.Item field="gripper" label="夹爪类型" required>
+          <Form.Item field="gripper" label="夹爪类型">
             <Select placeholder="请选择夹爪类型">
               {gripperOptions.map((option) => (
                 <Option key={option.value} value={option.value}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import bg from '@/assets/bg2.png';
+import bg from '@/assets/images/bg2.png';
 import { Typography, Card } from '@arco-design/web-react';
 
 function Welcome() {
@@ -17,7 +17,7 @@ function Welcome() {
             backgroundRepeat: 'no-repeat',
             backgroundSize: 'contain',
             backgroundImage: `url(${bg})`,
-            height: '100%', // 容器高度撑满
+            height: '75vh', // 容器高度撑满
             minHeight: '450px', // 设置最小高度
             paddingRight: '300px', // 为图片预留空间
             boxSizing: 'border-box',

@@ -21,7 +21,7 @@
   "dependencies": {
     "@antv/data-set": "^0.11.8",
     "@arco-design/color": "^0.4.0",
-    "@arco-design/web-react": "^2.32.2",
+    "@arco-design/web-react": ">=2.0.0",
     "@arco-plugins/vite-react": "^1.0.5",
     "@arco-themes/react-arco-pro": "^0.0.7",
     "@loadable/component": "^5.13.2",
@@ -31,6 +31,7 @@
     "bizcharts": "^4.1.11",
     "classnames": "^2.3.1",
     "copy-to-clipboard": "^3.3.1",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.19",
     "lodash": "^4.17.21",
     "mockjs": "^1.1.0",

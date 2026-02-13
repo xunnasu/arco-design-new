@@ -7,7 +7,6 @@ import { ConfigProvider } from '@arco-design/web-react';
 import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import axios from 'axios';
 
 // Use VITE_API_BASE to set axios baseURL for builds (when set) or use relative paths with dev proxy
 const apiBase = import.meta.env.VITE_API_BASE ?? '';

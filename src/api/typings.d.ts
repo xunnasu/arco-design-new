@@ -156,6 +156,14 @@ declare namespace API {
     created_at?: string;
     updated_at?: string;
     video_file_url?: string;
+    video_path: string;
+    is_success: boolean;
+    robot_model?: string; // 机器人类型
+    robot_morphology?: string; // 机器人形态
+    gripper?: string; // 夹爪类型
+  };
+  type VideoGridProps = {
+    episodes: Episode[];
   };
 
   type DatasetCreateParams = {
