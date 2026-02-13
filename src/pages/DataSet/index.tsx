@@ -11,7 +11,7 @@ import {
 } from '@arco-design/web-react';
 import { IconPlus, IconDownload } from '@arco-design/web-react/icon';
 import type { TableProps } from '@arco-design/web-react';
-import { getDatasetList } from '@/api/dataset';
+import { getDatasets } from '@/api/dataset';
 import dayjs from 'dayjs';
 import SearchForm from './form';
 import { useHistory } from 'react-router-dom';
@@ -201,7 +201,7 @@ function DataSet() {
   ) => {
     setLoading(true);
     try {
-      const res = await getDatasetList({
+      const res = await getDatasets({
         page,
         limit: pageSize,
         ...params,

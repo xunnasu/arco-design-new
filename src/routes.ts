@@ -46,6 +46,14 @@ export const routes: IRoute[] = [
         name: '自研',
         key: 'SceneAheadData/self-developed',
       },
+      {
+        name: 'ArtVIP',
+        key: 'SceneAheadData/artvip',
+      },
+      {
+        name: 'RoboCase',
+        key: 'SceneAheadData/robo-case',
+      },
     ],
   },
 ];

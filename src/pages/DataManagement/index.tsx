@@ -45,7 +45,7 @@ function DataManagement() {
   const [searchParams, setSearchParams] = useState<API.SearchFormData>({});
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
   const [datasets, setDatasets] = useState<{ [key: string]: string }>({}); // 存储数据集ID到名称的映射
-  const [isTableView, setIsTableView] = useState<boolean>();
+  const [isTableView, setIsTableView] = useState<boolean>(true); // 默认表格模式
   const [gridPageSize, setGridPageSize] = useState<number>(10);
   const [gridTotal, setGridTotal] = useState<number>(0);
   const [gridCurrentPage, setGridCurrentPage] = useState<number>(1);

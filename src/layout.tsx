@@ -41,19 +41,33 @@ function getIconFromKey(key) {
       return <IconStorage className={styles.icon} />;
     case 'SceneAheadData':
       return <IconArchive className={styles.icon} />;
-
+    case 'SceneAheadData/self-developed':
+      return <IconArchive className={styles.icon} />;
+    case 'SceneAheadData/artvip':
+      return <IconArchive className={styles.icon} />;
+    case 'SceneAheadData/robo-case':
+      return <IconArchive className={styles.icon} />;
     default:
       return <div className={styles['icon-empty']} />;
   }
 }
 
 function getFlattenRoutes(routes) {
-  const mod = import.meta.glob('./pages/**/[a-z[]*.tsx');
+  // 匹配所有 pages 下的 index.tsx，确保嵌套路由（如 SceneAheadData/self-developed）能被正确匹配
+  const mod = import.meta.glob('./pages/**/index.tsx');
   const res = [];
   function travel(_routes) {
     _routes.forEach((route) => {
       if (route.key && !route.children) {
-        route.component = lazyload(mod[`./pages/${route.key}/index.tsx`]);
+        const modulePath = `./pages/${route.key}/index.tsx`;
+        const loader = mod[modulePath];
+        if (!loader) {
+          console.warn(
+            `[getFlattenRoutes] 未找到页面模块: ${modulePath}，请确认文件存在`
+          );
+          return;
+        }
+        route.component = lazyload(loader);
         res.push(route);
       } else if (isArray(route.children) && route.children.length) {
         travel(route.children);
@@ -160,6 +174,12 @@ function PageLayout() {
           const childrenToRender = visibleChildren.filter(
             (c) => c.key !== homeKey
           );
+          // 第一个子菜单项显示该子路由的 name，而非父级 name
+          const homeTitleDom = (
+            <>
+              {iconDom} {locale[homeChild.name] || homeChild.name}
+            </>
+          );
           // 让 SubMenu 标题可点击，直接跳转到主列表页（阻止事件冒泡以避免触发展开/收起）
           const clickableTitleDom = (
             <span
@@ -173,7 +193,7 @@ function PageLayout() {
           );
           return (
             <SubMenu key={route.key} title={clickableTitleDom}>
-              <MenuItem key={homeKey}>{titleDom}</MenuItem>
+              <MenuItem key={homeKey}>{homeTitleDom}</MenuItem>
               {childrenToRender.length > 0 &&
                 travel(childrenToRender, level + 1, [
                   ...parentNode,

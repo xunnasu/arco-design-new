@@ -46,21 +46,12 @@ export type DatasetStatsResponse = {
   data: API.DatasetStats;
   success: boolean;
 };
-
-export function getDatasetList(params: DatasetListParams) {
-  return axios.post<DatasetListResponse>('/api/v1/dataset/list', params);
-}
-
-export function getDatasetDetail(datasetId: string) {
-  return axios.get<DatasetDetailResponse>(
-    `/api/v1/dataset/detail/${datasetId}`
-  );
-}
-
 export function createDataset(params: API.DatasetCreateParams) {
   return axios.post<DatasetCreateResponse>('/api/v1/dataset', params);
 }
-
+export function getDatasets(params: DatasetListParams) {
+  return axios.post<DatasetListResponse>('/api/v1/dataset/list', params);
+}
 export function updateDataset(
   datasetId: string,
   params: API.DatasetUpdateParams
@@ -70,17 +61,10 @@ export function updateDataset(
     params
   );
 }
-
-export function deleteDataset(datasetId: string) {
-  return axios.delete<DatasetDeleteResponse>(`/api/v1/dataset/${datasetId}`);
-}
-
-export function getDatasetStats() {
-  return axios.get<DatasetStatsResponse>('/api/v1/dataset/stats');
-}
-
-export function getDatasets(params: DatasetListParams) {
-  return axios.post<DatasetListResponse>('/api/v1/dataset/list', params);
+export function getDatasetDetail(datasetId: string) {
+  return axios.get<DatasetDetailResponse>(
+    `/api/v1/dataset/detail/${datasetId}`
+  );
 }
 export function getEpisodesList(params: DatasetListParams) {
   return axios.post<DatasetEpisodeListResponse>('/api/v1/episode/list', params);
