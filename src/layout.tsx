@@ -174,6 +174,14 @@ function PageLayout() {
           const childrenToRender = visibleChildren.filter(
             (c) => c.key !== homeKey
           );
+          // 将第一个子菜单项（homeChild）注册到 menuMap，以便选中状态能正确显示
+          menuMap.current.set(homeKey, { menuItem: true });
+          // 同时设置 homeChild 的 routeMap，以便面包屑能正确显示
+          const { breadcrumb: homeBreadcrumb = true } = homeChild;
+          routeMap.current.set(
+            `/${homeKey}`,
+            homeBreadcrumb ? [...parentNode, route.name, homeChild.name] : []
+          );
           // 第一个子菜单项显示该子路由的 name，而非父级 name
           const homeTitleDom = (
             <>

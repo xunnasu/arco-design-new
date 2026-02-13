@@ -9,6 +9,7 @@ import {
   Input,
   Button,
   Message,
+  Tooltip,
   type UploadProps,
 } from '@arco-design/web-react';
 import { IconPlus } from '@arco-design/web-react/icon';
@@ -70,15 +71,7 @@ const UpLoadFile: FC<UploadFileProps> = (props) => {
     drag: true,
     showUploadList: true,
     accept: '.mcap,.bag,.splat,.png,.jpg,.jpeg,.zip',
-    // 自定义渲染，右侧显示百分比
-    // itemRender: (originNode: any, file: any) => (
-    //   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%" }}>
-    //     <Tooltip content={file.name}>
-    //       <div style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginRight: "10px" }}>{originNode}</div>
-    //     </Tooltip>
-    //     <div style={{ marginTop: 7, minWidth: "40px", textAlign: "right" }}>{Math.round(file.percent || 0)}%</div>
-    //   </div>
-    // ),
+    limit: 50,
     customRequest: async ({ file, onSuccess, onError, onProgress }: any) => {
       const mimeType = file.type || getFileMimeType(file.name);
       let md5Checksum = '';
