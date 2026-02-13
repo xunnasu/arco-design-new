@@ -3,6 +3,7 @@ import {
   Typography,
   Card,
   Table,
+  Pagination,
   PaginationProps,
   Message,
   Tooltip,
@@ -11,7 +12,10 @@ import {
   Tag,
   Modal,
   Switch,
+  Spin,
+  ConfigProvider,
 } from '@arco-design/web-react';
+import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import {
   IconPlus,
   IconDownload,
@@ -250,10 +254,13 @@ function DataManagement() {
       },
     },
   ]);
+  type FetchMode = 'table' | 'grid';
+
   const fetchData = async (
     page = 1,
     pageSize = 10,
-    params: API.SearchFormData = {}
+    params: API.SearchFormData = {},
+    mode: FetchMode = 'table'
   ) => {
     setLoading(true);
     try {
@@ -264,14 +271,21 @@ function DataManagement() {
       });
       if (res.status === 200) {
         const list = res.data.data.list || [];
-        console.log(list);
-        setData(list);
-        setEpisodes(list);
-        setPagination({
-          current: page,
-          pageSize,
-          total: res.data.data.total || 0,
-        });
+        const total = res.data.data.total || 0;
+        if (mode === 'table') {
+          setData(list);
+          setPagination((prev) => ({
+            ...prev,
+            current: page,
+            pageSize,
+            total,
+          }));
+        } else {
+          setEpisodes(list);
+          setGridTotal(total);
+          setGridCurrentPage(page);
+          setGridPageSize(pageSize);
+        }
       }
     } catch (error) {
       Message.error('获取数据集列表失败');
@@ -302,32 +316,36 @@ function DataManagement() {
   }, []);
 
   useEffect(() => {
-    fetchData(1, pagination.pageSize, searchParams);
+    const pageSize = isTableView ? pagination.pageSize : gridPageSize;
+    fetchData(1, pageSize, searchParams, isTableView ? 'table' : 'grid');
   }, [searchParams]);
 
-  const onChangeTable = (pagination: PaginationProps) => {
-    const { current, pageSize } = pagination;
-    fetchData(current as number, pageSize as number, searchParams);
+  const onChangeTable = (p: PaginationProps) => {
+    const { current, pageSize } = p;
+    fetchData(current as number, pageSize as number, searchParams, 'table');
+  };
+
+  const onChangeGridPage = (current: number, pageSize: number) => {
+    fetchData(current, pageSize, searchParams, 'grid');
   };
 
   const handleSearch = (params: API.SearchFormData) => {
     setSearchParams(params);
-    setPagination({
-      ...pagination,
-      current: 1,
-    });
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    setGridCurrentPage(1);
   };
 
   const handleReset = () => {
     setSearchParams({});
-    setPagination({
-      ...pagination,
-      current: 1,
-    });
+    setPagination((prev) => ({ ...prev, current: 1 }));
+    setGridCurrentPage(1);
   };
 
   const handleReload = () => {
-    fetchData(pagination.current, pagination.pageSize, searchParams);
+    const mode = isTableView ? 'table' : 'grid';
+    const page = isTableView ? pagination.current : gridCurrentPage;
+    const pageSize = isTableView ? pagination.pageSize : gridPageSize;
+    fetchData(page, pageSize, searchParams, mode);
   };
   // 上传文件
   const handleUploadFile = () => {
@@ -339,8 +357,10 @@ function DataManagement() {
 
   const handleOk = () => {
     setIsUploadModalOpen(false);
-    // 重新加载数据
-    fetchData(pagination.current, pagination.pageSize, searchParams);
+    const mode = isTableView ? 'table' : 'grid';
+    const page = isTableView ? pagination.current : gridCurrentPage;
+    const pageSize = isTableView ? pagination.pageSize : gridPageSize;
+    fetchData(page, pageSize, searchParams, mode);
   };
   return (
     <Card style={{ height: '100%' }}>
@@ -363,9 +383,15 @@ function DataManagement() {
             className={styles['switch-mode']}
             checked={isTableView}
             onChange={(checked) => {
-              // 请求数据集列表
-              fetchData(1, pagination.pageSize, searchParams);
               setIsTableView(checked);
+              const pageSize = checked ? pagination.pageSize : gridPageSize;
+              const page = 1;
+              fetchData(
+                page,
+                pageSize,
+                searchParams,
+                checked ? 'table' : 'grid'
+              );
             }}
           />
         </Space>
@@ -381,7 +407,34 @@ function DataManagement() {
           data={data}
         />
       ) : (
-        <VideoGrid episodes={episodes} />
+        <ConfigProvider locale={zhCN}>
+          <Spin style={{ width: '100%' }} loading={loading}>
+            <VideoGrid episodes={episodes} />
+            {gridTotal > 0 && (
+              <div
+                style={{
+                  marginTop: 16,
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <Pagination
+                  current={gridCurrentPage}
+                  pageSize={gridPageSize}
+                  total={gridTotal}
+                  showJumper
+                  sizeCanChange
+                  onChange={(page, size) => onChangeGridPage(page, size)}
+                  showTotal={(total) =>
+                    `第 ${gridCurrentPage}-${Math.ceil(
+                      total / gridPageSize
+                    )} 页/总共 ${total} 条`
+                  }
+                />
+              </div>
+            )}
+          </Spin>
+        </ConfigProvider>
       )}
       <Modal
         visible={isUploadModalOpen}
