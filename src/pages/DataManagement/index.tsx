@@ -50,7 +50,9 @@ function DataManagement() {
   const [gridTotal, setGridTotal] = useState<number>(0);
   const [gridCurrentPage, setGridCurrentPage] = useState<number>(1);
   const [episodes, setEpisodes] = useState<any[]>([]);
-  const [columns] = useState<TableProps['columns']>([
+  type FetchMode = 'table' | 'grid';
+
+  const columns: TableProps['columns'] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -64,9 +66,10 @@ function DataManagement() {
       dataIndex: 'dataset_id',
       align: 'center',
       valueType: 'select',
-      width: 200,
+      width: 100,
       render: (value) => {
-        return datasets[value] || value || '-';
+        const stringValue = String(value);
+        return datasets[stringValue] || '-';
       },
     },
     {
@@ -103,7 +106,7 @@ function DataManagement() {
                 textOverflow: 'ellipsis',
               }}
             >
-              {displayText}
+              {displayText} || '-'
             </div>
           </Tooltip>
         );
@@ -113,7 +116,7 @@ function DataManagement() {
       title: '机器人类型',
       dataIndex: 'robot_model',
       align: 'center',
-      width: 100,
+      width: 110,
       valueType: 'select',
       valueEnum: {
         'Franka Emika Panda': 'Franka Emika Panda',
@@ -125,6 +128,7 @@ function DataManagement() {
         r1lite: 'r1lite',
         'FastUMI Pro hardware suite': 'FastUMI Pro hardware suite',
       },
+      render: (value) => value || '-',
     },
     {
       title: '夹爪类型',
@@ -136,6 +140,7 @@ function DataManagement() {
         'Parallel Gripper': 'Parallel Gripper',
         'Serial Gripper': 'Serial Gripper',
       },
+      render: (value) => value || '-',
     },
     {
       title: '是否成功',
@@ -169,19 +174,24 @@ function DataManagement() {
       dataIndex: 'start_total_frames',
       align: 'center',
       hideInTable: true,
+      width: 100,
+      render: (value) => value || '-',
     },
     {
       title: '最大帧数',
       dataIndex: 'end_total_frames',
       align: 'center',
       hideInTable: true,
+      width: 100,
+      render: (value) => value || '-',
     },
     {
       title: '总帧数',
       dataIndex: 'total_frames',
       align: 'center',
       hideInSearch: true,
-      // width: 100,
+      width: 100,
+      render: (value) => value || '-',
     },
     {
       title: '创建时间',
@@ -189,7 +199,7 @@ function DataManagement() {
       dataIndex: 'created_at',
       align: 'center',
       render: (_, record) =>
-        dayjs(record.created_at).format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(record.created_at).format('YYYY-MM-DD HH:mm:ss') || '-',
       search: {
         transform: (value) => {
           return value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -203,7 +213,7 @@ function DataManagement() {
       dataIndex: 'updated_at',
       align: 'center',
       render: (_, record) =>
-        dayjs(record.updated_at).format('YYYY-MM-DD HH:mm:ss'),
+        dayjs(record.updated_at).format('YYYY-MM-DD HH:mm:ss') || '-',
       search: {
         transform: (value) => {
           return value ? dayjs(value).format('YYYY-MM-DD HH:mm:ss') : '';
@@ -233,7 +243,7 @@ function DataManagement() {
       title: '操作',
       align: 'center',
       fixed: 'right',
-      width: 120,
+      width: 140,
       hideInSearch: true,
       render: (_, record) => {
         return (
@@ -253,8 +263,7 @@ function DataManagement() {
         );
       },
     },
-  ]);
-  type FetchMode = 'table' | 'grid';
+  ];
 
   const fetchData = async (
     page = 1,
@@ -294,13 +303,14 @@ function DataManagement() {
     }
   };
 
-  // 获取数据集列表，用于显示数据集名称
   useEffect(() => {
     const fetchDatasetsList = async () => {
       try {
-        const res = await getDatasets({ page: 1, limit: 100 });
+        const res = await getDatasets({ page: 1, limit: 10 });
+        // 检查响应数据结构
         if (res.status === 200) {
-          const list = res.data?.data?.list || [];
+          console.log('获取数据集列表响应:', res);
+          const list = res.data.data?.list || [];
           const datasetMap: { [key: string]: string } = {};
           list.forEach((d: any) => {
             datasetMap[d.id] = `${d.dataset_name} ${d.dataset_version}`;
