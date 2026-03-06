@@ -106,7 +106,7 @@ function DataManagement() {
                 textOverflow: 'ellipsis',
               }}
             >
-              {displayText} || '-'
+              {displayText || '--'}
             </div>
           </Tooltip>
         );
